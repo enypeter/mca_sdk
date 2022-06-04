@@ -1,4 +1,3 @@
-
 //Images
 
 const String insight = 'assets/images/insight.png';
