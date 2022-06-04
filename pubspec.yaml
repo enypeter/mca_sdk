@@ -28,4 +28,5 @@ flutter:
         pluginClass: FlutterMyCover
 
   assets:
-    - assets/images/
+   - assets/images/
+
