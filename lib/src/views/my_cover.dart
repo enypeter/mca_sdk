@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mca_sdk/src/const.dart';
+import '../theme.dart';
 import '../views/auto.dart';
 import '../views/gadget.dart';
 import '../views/health.dart';
@@ -17,11 +18,25 @@ class MyCover extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
+            InkWell(
+              onTap: () => Navigator.pop(context),
+              child: Container(
+                  decoration: BoxDecoration(
+                      shape: BoxShape.circle, color: RED.withOpacity(0.2)),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Icon(
+                      Icons.close,
+                      color: RED,
+                      size: 15,
+                    ),
+                  )),
+            ),
             Expanded(child: openProductField(productType)),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Image.asset(myCover,
-                  width: 185, fit: BoxFit.fitWidth, package: "mca_sdk"),
+                  width: 170, fit: BoxFit.fitWidth, package: "mca_sdk"),
             ),
           ],
         ),

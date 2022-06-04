@@ -99,7 +99,6 @@ class _HealthScreenState extends State<HealthScreen>
               smallVerticalSpace(),
               Image.asset(hygeia, height: 24,
                   package: "mca_sdk"),
-              const Spacer(),
             ],
           ),
         ),
