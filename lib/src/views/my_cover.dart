@@ -21,7 +21,7 @@ class MyCover extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Image.asset(myCover,
-                  width: 185, fit: BoxFit.fitWidth),
+                  width: 185, fit: BoxFit.fitWidth, package: "mca_sdk"),
             ),
           ],
         ),
@@ -45,7 +45,6 @@ class MyCover extends StatelessWidget {
   }
 }
 
-
 class MyCoverLaunch {
   const MyCoverLaunch(
       {Key? key, required this.productType, required this.context});
@@ -55,7 +54,6 @@ class MyCoverLaunch {
 
   /// Starts Standard Transaction
   charge() async {
-    print('I go there');
     return await Navigator.push(
       context,
       MaterialPageRoute(

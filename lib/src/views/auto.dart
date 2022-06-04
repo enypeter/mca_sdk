@@ -9,7 +9,6 @@ import '../widgets/input.dart';
 class AutoScreen extends StatefulWidget {
   const AutoScreen({Key? key}) : super(key: key);
 
-
   @override
   State<AutoScreen> createState() => _AutoScreenState();
 }
@@ -45,7 +44,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return  selectBody(bodyType);
+    return selectBody(bodyType);
   }
 
   selectBody(BodyType bodyType) {
@@ -104,7 +103,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   onTap: () =>
                       setState(() => bodyType = BodyType.personalDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24),
+              Image.asset(hygeia, height: 24,
+                  package: "mca_sdk"),
             ],
           ),
         ),
@@ -129,8 +129,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                           color: FILL_GREEN, shape: BoxShape.circle),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut,
-                            height: 55, width: 55),
+                        child: Image.asset(checkOut, height: 55, width: 55,
+                            package: "mca_sdk"),
                       ))),
               verticalSpace(),
               const Center(
@@ -149,8 +149,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
                     text: 'Done',
-                    onTap: () =>
-                        setState(() => bodyType = BodyType.introPage)),
+                    onTap: () => setState(() => bodyType = BodyType.introPage)),
               ),
               smallVerticalSpace(),
             ],
@@ -204,7 +203,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   text: 'Get Covered',
                   onTap: () => setState(() => bodyType = BodyType.planDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24),
+              Image.asset(hygeia, height: 24,
+                  package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -277,7 +277,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   text: 'Get Covered',
                   onTap: () => setState(() => bodyType = BodyType.planDetail2)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24),
+              Image.asset(hygeia, height: 24,
+                  package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -341,7 +342,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   text: 'Get Covered',
                   onTap: () => setState(() => bodyType = BodyType.success)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24),
+              Image.asset(hygeia, height: 24,
+                  package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -362,7 +364,11 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(book, height: 25))),
+                    child: Image.asset(
+                      book,
+                      height: 25,
+                      package: "mca_sdk",
+                    ))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -389,7 +395,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(insight, height: 25))),
+                    child: Image.asset(insight, height: 25,
+                        package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -416,7 +423,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(layer, height: 25))),
+                    child: Image.asset(layer, height: 25,
+                        package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -428,8 +436,6 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
           ],
         ),
       );
-
-
 }
 
 enum BodyType { introPage, personalDetail, planDetail, planDetail2, success }
