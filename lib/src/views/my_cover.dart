@@ -20,19 +20,22 @@ class MyCover extends StatelessWidget {
           children: [
             Align(
               alignment: Alignment.topRight,
-              child: InkWell(
-                onTap: () => Navigator.pop(context),
-                child: Container(
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle, color: RED.withOpacity(0.2)),
-                    child: const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Icon(
-                        Icons.close,
-                        color: RED,
-                        size: 15,
-                      ),
-                    )),
+              child: Padding(
+                padding: const EdgeInsets.only(right: 20),
+                child: InkWell(
+                  onTap: () => Navigator.pop(context),
+                  child: Container(
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle, color: RED.withOpacity(0.2)),
+                      child: const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Icon(
+                          Icons.close,
+                          color: RED,
+                          size: 15,
+                        ),
+                      )),
+                ),
               ),
             ),
             Expanded(child: openProductField(productType)),
