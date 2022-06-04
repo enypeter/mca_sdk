@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mca_sdk/src/const.dart';
 import '../views/auto.dart';
 import '../views/gadget.dart';
 import '../views/health.dart';
@@ -19,7 +20,7 @@ class MyCover extends StatelessWidget {
             Expanded(child: openProductField(productType)),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
-              child: Image.asset('assets/my_cover.png',
+              child: Image.asset(myCover,
                   width: 185, fit: BoxFit.fitWidth),
             ),
           ],
