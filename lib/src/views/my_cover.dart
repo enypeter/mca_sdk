@@ -18,7 +18,8 @@ class MyCover extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            Align(alignment: Alignment.topRight,
+            Align(
+              alignment: Alignment.topRight,
               child: InkWell(
                 onTap: () => Navigator.pop(context),
                 child: Container(
