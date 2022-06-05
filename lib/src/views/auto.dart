@@ -160,53 +160,55 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
   }
 
   personalDetailScreen() {
-    return Center(
-      child: Container(
-        color: WHITE,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              verticalSpace(),
-              Container(
-                decoration: BoxDecoration(
-                    color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.info, color: GREEN),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Text(
-                            'Enter details as it appear on legal documents.',
-                            style: TextStyle(fontSize: 12)),
-                      )
-                    ],
+    return SingleChildScrollView(
+      child: Center(
+        child: Container(
+          color: WHITE,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                verticalSpace(),
+                Container(
+                  decoration: BoxDecoration(
+                      color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                    child: Row(
+                      children: const [
+                        Icon(Icons.info, color: GREEN),
+                        SizedBox(width: 15),
+                        Expanded(
+                          child: Text(
+                              'Enter details as it appear on legal documents.',
+                              style: TextStyle(fontSize: 12)),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              verticalSpace(),
-              textBoxTitle('Name of Plan Owner'),
-              const InputFormField(hint: 'First name Last name'),
-              smallVerticalSpace(),
-              textBoxTitle('Email'),
-              const InputFormField(hint: 'abc_2002@gmail.com'),
-              verticalSpace(),
-              verticalSpace(),
-              const Divider(),
-              verticalSpace(),
-              button(
-                  text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail)),
-              smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
-              const Spacer(),
-            ],
+                verticalSpace(),
+                textBoxTitle('Name of Plan Owner'),
+                const InputFormField(hint: 'First name Last name'),
+                smallVerticalSpace(),
+                textBoxTitle('Email'),
+                const InputFormField(hint: 'abc_2002@gmail.com'),
+                verticalSpace(),
+                verticalSpace(),
+                const Divider(),
+                verticalSpace(),
+                button(
+                    text: 'Get Covered',
+                    onTap: () => setState(() => bodyType = BodyType.planDetail)),
+                smallVerticalSpace(),
+                Image.asset(hygeia, height: 24,
+                    package: "mca_sdk"),
+                const Spacer(),
+              ],
+            ),
           ),
         ),
       ),

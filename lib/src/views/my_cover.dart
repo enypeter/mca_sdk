@@ -29,11 +29,7 @@ class MyCover extends StatelessWidget {
                           shape: BoxShape.circle, color: RED.withOpacity(0.2)),
                       child: const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Icon(
-                          Icons.close,
-                          color: RED,
-                          size: 15,
-                        ),
+                        child: Icon(Icons.close, color: RED, size: 15),
                       )),
                 ),
               ),
