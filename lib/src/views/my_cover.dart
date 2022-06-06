@@ -128,12 +128,15 @@ class MyCoverLaunch {
     showLoading(context, text: 'Initializing MyCover...');
     var response =
         await WebServices.initialiseSdk(userId: userId, productId: productId);
-    print(response);
     Navigator.pop(context);
     if (response is String) {
+      print(response);
+
       return showFailedDialog(context, message: response);
     } else {
       print('successful');
+      print(response['data']['productDetails']);
+
       ResponseModel productData = ResponseModel.fromJson(response);
       return await Navigator.push(
         context,
