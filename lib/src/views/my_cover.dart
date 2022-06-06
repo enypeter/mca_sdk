@@ -6,6 +6,7 @@ import '../views/auto.dart';
 import '../views/gadget.dart';
 import '../views/health.dart';
 import '../views/travel.dart';
+import '../widgets/common.dart';
 
 enum TypeOfProduct { auto, health, gadget, travel }
 
@@ -106,32 +107,24 @@ class MyCoverLaunch {
 
   /// Starts Standard Transaction
   charge() async {
+    showLoading(context, text: 'Initializing MyCover...');
     var response =
         await WebServices.initialiseSdk(userId: userId, productId: productId);
     print(response);
-
-    if (response == null) {
-      return Column(
-        children: const [
-          Text('Initializing MyCover...'),
-          Center(
-            child: CircularProgressIndicator.adaptive(),
-          ),
-        ],
-      );
+    Navigator.pop(context);
+    if (response is String) {
+      return showFailedDialog(context, message: response);
     } else {
-      print(response);
-    }
-
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MyCover(
-          productType: productType,
-          userId: userId,
-          productId: productId,
+      return await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => MyCover(
+            productType: productType,
+            userId: userId,
+            productId: productId,
+          ),
         ),
-      ),
-    );
+      );
+    }
   }
 }
