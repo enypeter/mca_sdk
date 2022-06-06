@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mca_sdk/src/const.dart';
+import '../services/services.dart';
 import '../theme.dart';
 import '../views/auto.dart';
 import '../views/gadget.dart';
@@ -8,9 +9,33 @@ import '../views/travel.dart';
 
 enum TypeOfProduct { auto, health, gadget, travel }
 
-class MyCover extends StatelessWidget {
-  const MyCover({Key? key, required this.productType}) : super(key: key);
+class MyCover extends StatefulWidget {
+  const MyCover(
+      {Key? key,
+      required this.productType,
+      required this.productId,
+      required this.userId})
+      : super(key: key);
   final TypeOfProduct productType;
+  final String productId;
+  final String userId;
+
+  @override
+  State<MyCover> createState() => _MyCoverState();
+}
+
+class _MyCoverState extends State<MyCover> {
+
+  var productDetail;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    fetchProduct();
+    super.initState();
+  }
+
+  fetchProduct() async {}
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +59,7 @@ class MyCover extends StatelessWidget {
                 ),
               ),
             ),
-            Expanded(child: openProductField(productType)),
+            Expanded(child: productDetail== null? const Center(child: CircularProgressIndicator.adaptive(),):openProductField(widget.productType)),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Image.asset(myCover,
@@ -64,18 +89,38 @@ class MyCover extends StatelessWidget {
 
 class MyCoverLaunch {
   const MyCoverLaunch(
-      {Key? key, required this.productType, required this.context});
+      {Key? key,
+      required this.context,
+      required this.productType,
+      required this.productId,
+      required this.userId});
 
   final TypeOfProduct productType;
+  final String productId;
+  final String userId;
   final BuildContext context;
 
   /// Starts Standard Transaction
   charge() async {
+    var response =
+    WebServices.initialiseSdk(userId: userId, productId: productId);
+    print(response);
+
+    if (response == null) {
+      return const Center(
+        child: CircularProgressIndicator.adaptive(),
+      );
+    } else {
+      print(response);
+    }
+
     return await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => MyCover(
           productType: productType,
+          userId: userId,
+          productId: productId,
         ),
       ),
     );
