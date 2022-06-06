@@ -45,6 +45,8 @@ class _MyCoverState extends State<MyCover> {
     print(productDetail!.data.productDetails[0].description);
     print(productDetail!.data.productDetails[0].productCategoryId);
     print(productDetail!.data.productDetails[0].productCategory);
+    print(productDetail!.data.productDetails[0].formFields.length);
+    print(productDetail!.data.productDetails[0].formFields[0]);
     print(productDetail!.data.businessDetails.email);
     print(productDetail!.data.businessDetails.phoneNumber);
     print(productDetail!.data.businessDetails.firstName);
