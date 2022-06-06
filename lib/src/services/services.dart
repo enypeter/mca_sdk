@@ -46,6 +46,8 @@ class WebServices {
       var response =
       await _makePostRequest(apiUrl: url, data: data, token: token);
       var body = jsonDecode(response.body);
+      print(body);
+      print(response.statusCode);
       if (_isRequestSuccessful(response.statusCode)) {
         if (body['ResponseCode'] != 100) {
           return body['ResponseMessage'];

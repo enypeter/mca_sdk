@@ -25,7 +25,6 @@ class MyCover extends StatefulWidget {
 }
 
 class _MyCoverState extends State<MyCover> {
-
   var productDetail;
 
   @override
@@ -59,7 +58,12 @@ class _MyCoverState extends State<MyCover> {
                 ),
               ),
             ),
-            Expanded(child: productDetail== null? const Center(child: CircularProgressIndicator.adaptive(),):openProductField(widget.productType)),
+            Expanded(
+                child: productDetail == null
+                    ? const Center(
+                        child: CircularProgressIndicator.adaptive(),
+                      )
+                    : openProductField(widget.productType)),
             Padding(
               padding: const EdgeInsets.only(top: 20.0),
               child: Image.asset(myCover,
@@ -102,13 +106,18 @@ class MyCoverLaunch {
 
   /// Starts Standard Transaction
   charge() async {
-    var response = await
-    WebServices.initialiseSdk(userId: userId, productId: productId);
+    var response =
+        await WebServices.initialiseSdk(userId: userId, productId: productId);
     print(response);
 
     if (response == null) {
-      return const Center(
-        child: CircularProgressIndicator.adaptive(),
+      return Column(
+        children: const [
+          Text('Initializing MyCover...'),
+          Center(
+            child: CircularProgressIndicator.adaptive(),
+          ),
+        ],
       );
     } else {
       print(response);
