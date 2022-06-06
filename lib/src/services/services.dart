@@ -15,6 +15,8 @@ class WebServices {
       "client_id": userId,
       "product_id": productId,
     };
+    print(data);
+
     return await _initialisePostRequest(url: _initialiseSdkUrl, data: data);
   }
 
