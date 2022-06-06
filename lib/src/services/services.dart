@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 
 class WebServices {
   static const String _initialiseSdkUrl =
-      'https://mycover.ai/v1/sdk/initialize';
+      'https://staging.api.mycover.ai/v1/sdk/initialize';
 
   static initialiseSdk({
     required String userId,
