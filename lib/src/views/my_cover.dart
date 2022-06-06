@@ -39,8 +39,11 @@ class _MyCoverState extends State<MyCover> {
   }
 
   fetchProduct() async {
-    print(widget.productData);
+    print('widget.productData');
     productDetail = widget.productData;
+    print(productDetail!.data.productDetails);
+    print(productDetail!.data.businessDetails);
+
   }
 
   @override
