@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:mca_sdk/src/const.dart';
+import 'package:mca_sdk/src/models/response_model.dart';
 import '../services/services.dart';
 import '../theme.dart';
 import '../views/auto.dart';
@@ -14,19 +15,21 @@ class MyCover extends StatefulWidget {
   const MyCover(
       {Key? key,
       required this.productType,
+      required this.productData,
       required this.productId,
       required this.userId})
       : super(key: key);
   final TypeOfProduct productType;
   final String productId;
   final String userId;
+  final ResponseModel productData;
 
   @override
   State<MyCover> createState() => _MyCoverState();
 }
 
 class _MyCoverState extends State<MyCover> {
-  var productDetail;
+  ResponseModel? productDetail;
 
   @override
   void initState() {
@@ -35,7 +38,10 @@ class _MyCoverState extends State<MyCover> {
     super.initState();
   }
 
-  fetchProduct() async {}
+  fetchProduct() async {
+    print(widget.productData);
+    productDetail = widget.productData;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,6 +122,7 @@ class MyCoverLaunch {
       return showFailedDialog(context, message: response);
     } else {
       print('successful');
+      ResponseModel productData = ResponseModel.fromJson(response);
       return await Navigator.push(
         context,
         MaterialPageRoute(
@@ -123,6 +130,7 @@ class MyCoverLaunch {
             productType: productType,
             userId: userId,
             productId: productId,
+            productData: productData,
           ),
         ),
       );
