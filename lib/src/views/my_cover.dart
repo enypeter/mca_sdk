@@ -115,6 +115,7 @@ class MyCoverLaunch {
     if (response is String) {
       return showFailedDialog(context, message: response);
     } else {
+      print('successful');
       return await Navigator.push(
         context,
         MaterialPageRoute(

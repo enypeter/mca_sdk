@@ -67,10 +67,8 @@ Future<void> showLoading(context, {text}) async {
                         const Center(
                             child: CircularProgressIndicator(color: PRIMARY)),
                         const SizedBox(height: 20),
-                        Text(text ?? 'Loading...',
-                            textAlign: TextAlign.center,
-                            style:
-                                const TextStyle(color: PRIMARY, fontSize: 15))
+                        Text(text,
+                            textAlign: TextAlign.center)
                       ],
                     ),
                   ),
