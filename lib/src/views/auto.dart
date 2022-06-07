@@ -4,6 +4,7 @@ import 'package:mca_sdk/src/utils/validator.dart';
 
 import '../const.dart';
 import '../theme.dart';
+import '../utils/number_format.dart';
 import '../widgets/buttons.dart';
 import '../widgets/common.dart';
 import '../widgets/input.dart';
@@ -172,70 +173,66 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
   }
 
   personalDetailScreen() {
-    return SingleChildScrollView(
-      child: Center(
-        child: Container(
-          color: WHITE,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                verticalSpace(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: FILL_GREEN,
-                      borderRadius: BorderRadius.circular(3)),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 15),
-                    child: Row(
-                      children: const [
-                        Icon(Icons.info, color: GREEN),
-                        SizedBox(width: 15),
-                        Expanded(
-                          child: Text(
-                              'Enter details as it appear on legal documents.',
-                              style: TextStyle(fontSize: 12)),
-                        )
-                      ],
-                    ),
-                  ),
+    return Container(
+      color: WHITE,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            verticalSpace(),
+            Container(
+              decoration: BoxDecoration(
+                  color: FILL_GREEN,
+                  borderRadius: BorderRadius.circular(3)),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                    vertical: 8.0, horizontal: 15),
+                child: Row(
+                  children: const [
+                    Icon(Icons.info, color: GREEN),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: Text(
+                          'Enter details as it appear on legal documents.',
+                          style: TextStyle(fontSize: 12)),
+                    )
+                  ],
                 ),
-                verticalSpace(),
-                textBoxTitle('Name of Plan Owner'),
-                InputFormField(
-                  hint: 'First name Last name',
-                  controller: nameController,
-                  textCapitalization: TextCapitalization.words,
-                  validator: (value) => FieldValidator.validate(value),
-                ),
-                smallVerticalSpace(),
-                textBoxTitle('Email'),
-                InputFormField(
-                  hint: 'abc_2002@gmail.com',
-                  keyboardType: TextInputType.emailAddress,
-                  controller: emailController,
-                  validator: (value) => EmailValidator.validate(value),
-                ),
-                verticalSpace(),
-                verticalSpace(),
-                const Divider(),
-                verticalSpace(),
-                button(
-                    text: 'Get Covered',
-                    onTap: () {
-                      if (_formKey.currentState!.validate()) {
-                        setState(() => bodyType = BodyType.planDetail);
-                      }
-                    }),
-                smallVerticalSpace(),
-                Image.asset(hygeia, height: 24, package: "mca_sdk"),
-                const Spacer(),
-              ],
+              ),
             ),
-          ),
+            verticalSpace(),
+            textBoxTitle('Name of Plan Owner'),
+            InputFormField(
+              hint: 'First name Last name',
+              controller: nameController,
+              textCapitalization: TextCapitalization.words,
+              validator: (value) => FieldValidator.validate(value),
+            ),
+            smallVerticalSpace(),
+            textBoxTitle('Email'),
+            InputFormField(
+              hint: 'abc_2002@gmail.com',
+              keyboardType: TextInputType.emailAddress,
+              controller: emailController,
+              validator: (value) => EmailValidator.validate(value),
+            ),
+            verticalSpace(),
+            verticalSpace(),
+            const Divider(),
+            verticalSpace(),
+            button(
+                text: 'Get Covered',
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() => bodyType = BodyType.planDetail);
+                  }
+                }),
+            smallVerticalSpace(),
+            Image.asset(hygeia, height: 24, package: "mca_sdk"),
+            const Spacer(),
+          ],
         ),
       ),
     );
@@ -243,175 +240,228 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
 
   List<String> typeOfCar = ['Car', 'Wagon', 'SUV', 'Truck', 'Van', 'Trailer'];
 
-  planDetailScreen() {
-    return Center(
-      child: Container(
-        color: WHITE,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              verticalSpace(),
-              Container(
-                decoration: BoxDecoration(
-                    color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.info, color: GREEN),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Text('Enter vehicle details',
-                            style: TextStyle(fontSize: 12, color: BLACK)),
-                      )
-                    ],
+  void bottomSheetPicker(context, {required title, onSelect}) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            decoration: BoxDecoration(
+                color: WHITE, borderRadius: BorderRadius.circular(15)),
+            height: MediaQuery.of(context).size.height * 0.45,
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
                   ),
                 ),
+                Divider(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            typeOfCar.length,
+                            (i) => ListTile(
+                                  trailing: typeController.text == typeOfCar[i]
+                                      ? const Icon(Icons.check, color: PRIMARY)
+                                      : const SizedBox.shrink(),
+                                  title: Text(typeOfCar[i],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16)),
+                                  onTap: () => onSelect(typeOfCar[i]),
+                                ))),
+                  ),
+                ),
+              ],
+            )));
+  }
+
+  planDetailScreen() {
+    return Container(
+      color: WHITE,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            verticalSpace(),
+            Container(
+              decoration: BoxDecoration(
+                  color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                child: Row(
+                  children: const [
+                    Icon(Icons.info, color: GREEN),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: Text('Enter vehicle details',
+                          style: TextStyle(fontSize: 12, color: BLACK)),
+                    )
+                  ],
+                ),
               ),
-              verticalSpace(),
-              Row(
-                children: [
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      textBoxTitle('Vehicle Type'),
-                      InkWell(
-                        onTap: () => bottomSheetPicker(context, typeOfCar,
-                            title: 'Select Type of Car',
-                            selectItem: 'typeOfCar[i]',
-                            onSelect:(value){typeController.text = value;}),
-                        child: InputFormField(
-                          hint: 'Car',
-                          enabled: false,
-                          validator: (value) => FieldValidator.validate(value),
-                          suffixIcon: const Icon(Icons.expand_more),
-                          controller: typeController,
-                        ),
-                      ),
-                    ],
-                  )),
-                  const SizedBox(width: 10),
-                  Expanded(
-                      child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      textBoxTitle('Kind of Vehicle'),
-                      InputFormField(
-                        hint: 'Toyota',
-                        controller: makeController,
+            ),
+            verticalSpace(),
+            Row(
+              children: [
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    textBoxTitle('Vehicle Type'),
+                    InkWell(
+                      onTap: () => bottomSheetPicker(context,
+                          title: 'Select Type of Car', onSelect: (value) {
+                        typeController.text = value;
+                      }),
+                      child: InputFormField(
+                        hint: 'Car',
+                        enabled: false,
                         validator: (value) => FieldValidator.validate(value),
+                        suffixIcon: const Icon(Icons.expand_more),
+                        controller: typeController,
                       ),
-                    ],
-                  )),
-                ],
-              ),
-              smallVerticalSpace(),
-              textBoxTitle('Vehicle Plate No.'),
-              InputFormField(
-                hint: 'GHR21BC',
-                controller: plateNumberController,
-                textCapitalization: TextCapitalization.characters,
-                validator: (value) => FieldValidator.validate(value),
-              ),
-              verticalSpace(),
-              const Divider(),
-              verticalSpace(),
-              button(
-                  text: 'Get Covered',
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() => bodyType = BodyType.planDetail2);
-                    }
-                  }),
-              smallVerticalSpace(),
-              Image.asset(hygeia, height: 24, package: "mca_sdk"),
-              const Spacer(),
-            ],
-          ),
+                    ),
+                  ],
+                )),
+                const SizedBox(width: 10),
+                Expanded(
+                    child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    textBoxTitle('Kind of Vehicle'),
+                    InputFormField(
+                      hint: 'Toyota',
+                      controller: makeController,
+                      validator: (value) => FieldValidator.validate(value),
+                    ),
+                  ],
+                )),
+              ],
+            ),
+            smallVerticalSpace(),
+            textBoxTitle('Vehicle Plate No.'),
+            InputFormField(
+              hint: 'GHR21BC',
+              controller: plateNumberController,
+              textCapitalization: TextCapitalization.characters,
+              validator: (value) => FieldValidator.validate(value),
+            ),
+            verticalSpace(),
+            const Divider(),
+            verticalSpace(),
+            button(
+                text: 'Get Covered',
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() => bodyType = BodyType.planDetail2);
+                  }
+                }),
+            smallVerticalSpace(),
+            Image.asset(hygeia, height: 24, package: "mca_sdk"),
+            const Spacer(),
+          ],
         ),
       ),
     );
   }
 
   planDetailScreen2() {
-    return Center(
-      child: Container(
-        color: WHITE,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              verticalSpace(),
-              Container(
-                decoration: BoxDecoration(
-                    color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Row(
-                    children: const [
-                      Icon(Icons.info, color: GREEN),
-                      SizedBox(width: 15),
-                      Expanded(
-                        child: Text('Enter vehicle details',
-                            style: TextStyle(fontSize: 12, color: BLACK)),
-                      )
-                    ],
-                  ),
+    return Container(
+      color: WHITE,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            verticalSpace(),
+            Container(
+              decoration: BoxDecoration(
+                  color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
+              child: Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                child: Row(
+                  children: const [
+                    Icon(Icons.info, color: GREEN),
+                    SizedBox(width: 15),
+                    Expanded(
+                      child: Text('Enter vehicle details',
+                          style: TextStyle(fontSize: 12, color: BLACK)),
+                    )
+                  ],
                 ),
               ),
-              verticalSpace(),
-              textBoxTitle('Vehicle Value'),
-              InputFormField(
-                hint: '500,000',
-                controller: amountController,
-                inputFormatters: <TextInputFormatter>[
-                  FilteringTextInputFormatter.digitsOnly
-                ],
-                keyboardType: TextInputType.number,
-                validator: (value) => FieldValidator.validate(value),
+            ),
+            verticalSpace(),
+            textBoxTitle('Vehicle Value'),
+            InputFormField(
+              hint: '500,000',
+              controller: amountController,
+              inputFormatters: <TextInputFormatter>[
+                FilteringTextInputFormatter.digitsOnly,
+                CustomInputFormatter(),
+              ],
+              onChanged: (string) {
+                if (string.length > 1) {
+                  string = formatNumber(string.replaceAll(',', ''));
+                  setState(() {
+                    amountController.value = TextEditingValue(
+                      text: string,
+                      selection:
+                      TextSelection.collapsed(offset: string.length),
+                    );
+                  });
+                }
+              },
+              keyboardType: TextInputType.number,
+              validator: (value) => FieldValidator.validate(value),
+            ),
+            smallVerticalSpace(),
+            textBoxTitle('Promo(Optional)'),
+            InputFormField(
+              hint: 'GHRE0',
+              controller: promoController,
+            ),
+            verticalSpace(),
+            Container(
+              decoration: BoxDecoration(
+                  color: FILL_DEEP_GREEN,
+                  borderRadius: BorderRadius.circular(5)),
+              child: TextFormField(
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                    fontWeight: FontWeight.w600, fontSize: 18),
+                decoration: const InputDecoration(
+                    filled: false, border: InputBorder.none),
               ),
-              smallVerticalSpace(),
-              textBoxTitle('Promo(Optional)'),
-              InputFormField(
-                hint: 'GHRE0',
-                controller: promoController,
-              ),
-              verticalSpace(),
-              Container(
-                decoration: BoxDecoration(
-                    color: FILL_DEEP_GREEN,
-                    borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
-                  decoration: const InputDecoration(
-                      filled: false, border: InputBorder.none),
-                ),
-              ),
-              verticalSpace(),
-              const Divider(),
-              verticalSpace(),
-              button(
-                  text: 'Get Covered',
-                  onTap: () {
-                    if (_formKey.currentState!.validate()) {
-                      setState(() => bodyType = BodyType.success);
-                    }
-                  }),
-              smallVerticalSpace(),
-              Image.asset(hygeia, height: 24, package: "mca_sdk"),
-              const Spacer(),
-            ],
-          ),
+            ),
+            verticalSpace(),
+            const Divider(),
+            verticalSpace(),
+            button(
+                text: 'Get Covered',
+                onTap: () {
+                  if (_formKey.currentState!.validate()) {
+                    setState(() => bodyType = BodyType.success);
+                  }
+                }),
+            smallVerticalSpace(),
+            Image.asset(hygeia, height: 24, package: "mca_sdk"),
+            const Spacer(),
+          ],
         ),
       ),
     );
