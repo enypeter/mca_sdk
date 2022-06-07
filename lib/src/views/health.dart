@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../const.dart';
 import '../theme.dart';
+import '../utils/validator.dart';
 import '../widgets/buttons.dart';
 import '../widgets/common.dart';
 import '../widgets/input.dart';
@@ -17,6 +19,16 @@ class _HealthScreenState extends State<HealthScreen>
   TabController? tabController;
   int selectedTabIndex = 0;
   BodyType bodyType = BodyType.introPage;
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final durationController = TextEditingController();
+  final beneficiaryController = TextEditingController();
+  final yearController = TextEditingController();
+  final plateNumberController = TextEditingController();
+  final promoController = TextEditingController();
+  final amountController = TextEditingController();
 
   @override
   initState() {
@@ -44,7 +56,7 @@ class _HealthScreenState extends State<HealthScreen>
 
   @override
   Widget build(BuildContext context) {
-    return  selectBody(bodyType);
+    return Form(key: _formKey, child: selectBody(bodyType));
   }
 
   selectBody(BodyType bodyType) {
@@ -97,8 +109,7 @@ class _HealthScreenState extends State<HealthScreen>
                   onTap: () =>
                       setState(() => bodyType = BodyType.personalDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
             ],
           ),
         ),
@@ -124,8 +135,7 @@ class _HealthScreenState extends State<HealthScreen>
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Image.asset(checkOut,
-                            height: 55, width: 55,
-                            package: "mca_sdk"),
+                            height: 55, width: 55, package: "mca_sdk"),
                       ))),
               verticalSpace(),
               const Center(
@@ -144,8 +154,7 @@ class _HealthScreenState extends State<HealthScreen>
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
                     text: 'Done',
-                    onTap: () =>
-                        setState(() => bodyType = BodyType.introPage)),
+                    onTap: () => setState(() => bodyType = BodyType.introPage)),
               ),
               smallVerticalSpace(),
             ],
@@ -187,10 +196,20 @@ class _HealthScreenState extends State<HealthScreen>
               ),
               verticalSpace(),
               textBoxTitle('Name of Plan Owner'),
-              const InputFormField(hint: 'First name Last name'),
+              InputFormField(
+                hint: 'First name Last name',
+                controller: nameController,
+                textCapitalization: TextCapitalization.words,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               smallVerticalSpace(),
               textBoxTitle('Email'),
-              const InputFormField(hint: 'abc_2002@gmail.com'),
+              InputFormField(
+                hint: 'abc_2002@gmail.com',
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                validator: (value) => EmailValidator.validate(value),
+              ),
               verticalSpace(),
               verticalSpace(),
               const Divider(),
@@ -199,14 +218,60 @@ class _HealthScreenState extends State<HealthScreen>
                   text: 'Get Covered',
                   onTap: () => setState(() => bodyType = BodyType.planDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
         ),
       ),
     );
+  }
+
+  List<String> durationList = ['1 Month', '3 Months', '6 Months', '1 Year'];
+
+  void bottomSheetPicker(context, {required title, onSelect}) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            decoration: BoxDecoration(
+                color: WHITE, borderRadius: BorderRadius.circular(15)),
+            height: MediaQuery.of(context).size.height * 0.45,
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                  ),
+                ),
+                const Divider(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            durationList.length,
+                            (i) => ListTile(
+                                  trailing: durationController.text ==
+                                          durationList[i]
+                                      ? const Icon(Icons.check, color: PRIMARY)
+                                      : const SizedBox.shrink(),
+                                  title: Text(durationList[i],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16)),
+                                  onTap: () => onSelect(durationList[i]),
+                                ))),
+                  ),
+                ),
+              ],
+            )));
   }
 
   planDetailScreen() {
@@ -256,9 +321,19 @@ class _HealthScreenState extends State<HealthScreen>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('Period of cover'),
-                      const InputFormField(
-                        hint: '6 month',
-                        suffixIcon: const Icon(Icons.expand_more),
+                      InkWell(
+                        onTap: () => bottomSheetPicker(context,
+                            title: 'Select the duration', onSelect: (value) {
+                          Navigator.pop(context);
+                          durationController.text = value;
+                        }),
+                        child: InputFormField(
+                          hint: '6 month',
+                          suffixIcon: const Icon(Icons.expand_more),
+                          enabled: false,
+                          controller: durationController,
+                          validator: (value) => EmailValidator.validate(value),
+                        ),
                       ),
                     ],
                   )),
@@ -267,15 +342,26 @@ class _HealthScreenState extends State<HealthScreen>
                       child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      textBoxTitle('Number of Benefiary'),
-                      const InputFormField(hint: '2'),
+                      textBoxTitle('Number of Beneficiary'),
+                      InputFormField(
+                        hint: '2',
+                        inputFormatters: <TextInputFormatter>[
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        keyboardType: TextInputType.number,
+                        controller: beneficiaryController,
+                        validator: (value) => FieldValidator.validate(value),
+                      ),
                     ],
                   )),
                 ],
               ),
               smallVerticalSpace(),
               textBoxTitle('Promo code (Optional)'),
-              const InputFormField(hint: 'GHRE0'),
+               InputFormField(
+                hint: 'GHRE0',
+                controller: promoController,
+              ),
               verticalSpace(),
               Container(
                 decoration: BoxDecoration(
@@ -296,8 +382,7 @@ class _HealthScreenState extends State<HealthScreen>
                   text: 'Get Covered',
                   onTap: () => setState(() => bodyType = BodyType.success)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -318,8 +403,7 @@ class _HealthScreenState extends State<HealthScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(book, height: 25,
-                        package: "mca_sdk"))),
+                    child: Image.asset(book, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -344,8 +428,8 @@ class _HealthScreenState extends State<HealthScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(insight, height: 25,
-                        package: "mca_sdk"))),
+                    child:
+                        Image.asset(insight, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
