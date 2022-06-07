@@ -60,7 +60,7 @@ class _MyCoverState extends State<MyCover> {
             Align(
               alignment: Alignment.topRight,
               child: Padding(
-                padding: const EdgeInsets.only(right: 20),
+                padding: const EdgeInsets.only(right: 20,bottom: 15),
                 child: InkWell(
                   onTap: () => Navigator.pop(context),
                   child: Container(
