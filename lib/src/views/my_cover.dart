@@ -19,12 +19,16 @@ class MyCover extends StatefulWidget {
       required this.productType,
       required this.productData,
       required this.productId,
+      this.accentColor = PRIMARY,
+      this.primaryColor = FILL_GREEN,
       required this.userId})
       : super(key: key);
   final TypeOfProduct productType;
   final String productId;
   final String userId;
   final ResponseModel productData;
+  final primaryColor;
+  final accentColor;
 
   @override
   State<MyCover> createState() => _MyCoverState();
@@ -108,19 +112,24 @@ class MyCoverLaunch {
       required this.context,
       required this.productType,
       required this.productId,
+      this.primaryColor = PRIMARY,
+      this.accentColor = FILL_GREEN,
       required this.userId});
 
   final TypeOfProduct productType;
   final String productId;
   final String userId;
   final BuildContext context;
+  final accentColor;
+  final primaryColor;
 
-  /// Starts Standard Transaction
+  /// Get settings
   Future<ResponseModel> charge() async {
     showLoading(context, text: 'Initializing MyCover...');
     var response =
         await WebServices.initialiseSdk(userId: userId, productId: productId);
     Navigator.pop(context);
+
     // if (response is String) {
     //   print(response);
     //
@@ -129,18 +138,20 @@ class MyCoverLaunch {
     //   print('successful');
     //   print(response['data']['productDetails']);
 
-      ResponseModel productData = ResponseModel.fromJson(response);
-      return await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => MyCover(
-            productType: productType,
-            userId: userId,
-            productId: productId,
-            productData: productData,
-          ),
+    ResponseModel productData = ResponseModel.fromJson(response);
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MyCover(
+          productType: productType,
+          userId: userId,
+          productId: productId,
+          productData: productData,
+          primaryColor: primaryColor,
+          accentColor: accentColor,
         ),
-      );
+      ),
+    );
     // }
   }
 }
