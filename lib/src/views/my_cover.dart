@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:mca_sdk/src/const.dart';
 import 'package:mca_sdk/src/models/response_model.dart';
@@ -39,20 +41,10 @@ class _MyCoverState extends State<MyCover> {
   }
 
   fetchProduct() async {
-    print('widget.productData');
     productDetail = widget.productData;
-    print(productDetail!.data.businessDetails.email);
-    print(productDetail!.data.businessDetails.phoneNumber);
-    print(productDetail!.data.businessDetails.firstName);
-    print(productDetail!.data.businessDetails.lastName);
-    print(productDetail!.data.productDetails[0].name);
-    print(productDetail!.data.productDetails[0].description);
-    print(productDetail!.data.productDetails[0].productCategoryId);
-    print(productDetail!.data.productDetails[0].productCategory);
-    print(productDetail!.data.productDetails[0].formFields.length);
-    print(productDetail!.data.productDetails[0].formFields[0]);
-
-
+    log(productDetail!.data.businessDetails.email.toString());
+    print(productDetail!.data.businessDetails);
+    print(productDetail!.data.productDetails);
   }
 
   @override
@@ -124,18 +116,18 @@ class MyCoverLaunch {
   final BuildContext context;
 
   /// Starts Standard Transaction
-  charge() async {
+  Future<ResponseModel> charge() async {
     showLoading(context, text: 'Initializing MyCover...');
     var response =
         await WebServices.initialiseSdk(userId: userId, productId: productId);
     Navigator.pop(context);
-    if (response is String) {
-      print(response);
-
-      return showFailedDialog(context, message: response);
-    } else {
-      print('successful');
-      print(response['data']['productDetails']);
+    // if (response is String) {
+    //   print(response);
+    //
+    //   return  showFailedDialog(context, message: response);
+    // } else {
+    //   print('successful');
+    //   print(response['data']['productDetails']);
 
       ResponseModel productData = ResponseModel.fromJson(response);
       return await Navigator.push(
@@ -149,6 +141,6 @@ class MyCoverLaunch {
           ),
         ),
       );
-    }
+    // }
   }
 }

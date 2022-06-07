@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mca_sdk/src/utils/validator.dart';
 
 import '../const.dart';
 import '../theme.dart';
 import '../widgets/buttons.dart';
 import '../widgets/common.dart';
 import '../widgets/input.dart';
+import 'bottomSheetPicker.dart';
 
 class AutoScreen extends StatefulWidget {
   const AutoScreen({Key? key}) : super(key: key);
@@ -17,6 +20,16 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
   TabController? tabController;
   int selectedTabIndex = 0;
   BodyType bodyType = BodyType.introPage;
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final typeController = TextEditingController();
+  final makeController = TextEditingController();
+  final yearController = TextEditingController();
+  final plateNumberController = TextEditingController();
+  final promoController = TextEditingController();
+  final amountController = TextEditingController();
 
   @override
   initState() {
@@ -44,7 +57,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return selectBody(bodyType);
+    return Form(key: _formKey, child: selectBody(bodyType));
   }
 
   selectBody(BodyType bodyType) {
@@ -103,8 +116,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   onTap: () =>
                       setState(() => bodyType = BodyType.personalDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
             ],
           ),
         ),
@@ -129,8 +141,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                           color: FILL_GREEN, shape: BoxShape.circle),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut, height: 55, width: 55,
-                            package: "mca_sdk"),
+                        child: Image.asset(checkOut,
+                            height: 55, width: 55, package: "mca_sdk"),
                       ))),
               verticalSpace(),
               const Center(
@@ -173,10 +185,11 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                 verticalSpace(),
                 Container(
                   decoration: BoxDecoration(
-                      color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
+                      color: FILL_GREEN,
+                      borderRadius: BorderRadius.circular(3)),
                   child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 15),
                     child: Row(
                       children: const [
                         Icon(Icons.info, color: GREEN),
@@ -192,20 +205,33 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                 ),
                 verticalSpace(),
                 textBoxTitle('Name of Plan Owner'),
-                const InputFormField(hint: 'First name Last name'),
+                InputFormField(
+                  hint: 'First name Last name',
+                  controller: nameController,
+                  textCapitalization: TextCapitalization.words,
+                  validator: (value) => FieldValidator.validate(value),
+                ),
                 smallVerticalSpace(),
                 textBoxTitle('Email'),
-                const InputFormField(hint: 'abc_2002@gmail.com'),
+                InputFormField(
+                  hint: 'abc_2002@gmail.com',
+                  keyboardType: TextInputType.emailAddress,
+                  controller: emailController,
+                  validator: (value) => EmailValidator.validate(value),
+                ),
                 verticalSpace(),
                 verticalSpace(),
                 const Divider(),
                 verticalSpace(),
                 button(
                     text: 'Get Covered',
-                    onTap: () => setState(() => bodyType = BodyType.planDetail)),
+                    onTap: () {
+                      if (_formKey.currentState!.validate()) {
+                        setState(() => bodyType = BodyType.planDetail);
+                      }
+                    }),
                 smallVerticalSpace(),
-                Image.asset(hygeia, height: 24,
-                    package: "mca_sdk"),
+                Image.asset(hygeia, height: 24, package: "mca_sdk"),
                 const Spacer(),
               ],
             ),
@@ -214,6 +240,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
       ),
     );
   }
+
+  List<String> typeOfCar = ['Car', 'Wagon', 'SUV', 'Truck', 'Van', 'Trailer'];
 
   planDetailScreen() {
     return Center(
@@ -252,9 +280,18 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('Vehicle Type'),
-                      const InputFormField(
-                        hint: '6 month',
-                        suffixIcon: const Icon(Icons.expand_more),
+                      InkWell(
+                        onTap: () => bottomSheetPicker(context, typeOfCar,
+                            title: 'Select Type of Car',
+                            selectItem: 'typeOfCar[i]',
+                            onSelect:(value){typeController.text = value;}),
+                        child: InputFormField(
+                          hint: 'Car',
+                          enabled: false,
+                          validator: (value) => FieldValidator.validate(value),
+                          suffixIcon: const Icon(Icons.expand_more),
+                          controller: typeController,
+                        ),
                       ),
                     ],
                   )),
@@ -264,23 +301,35 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('Kind of Vehicle'),
-                      const InputFormField(hint: '2'),
+                      InputFormField(
+                        hint: 'Toyota',
+                        controller: makeController,
+                        validator: (value) => FieldValidator.validate(value),
+                      ),
                     ],
                   )),
                 ],
               ),
               smallVerticalSpace(),
               textBoxTitle('Vehicle Plate No.'),
-              const InputFormField(hint: 'GHRE0'),
+              InputFormField(
+                hint: 'GHR21BC',
+                controller: plateNumberController,
+                textCapitalization: TextCapitalization.characters,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               verticalSpace(),
               const Divider(),
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail2)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.planDetail2);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -320,10 +369,21 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
               ),
               verticalSpace(),
               textBoxTitle('Vehicle Value'),
-              const InputFormField(hint: '500,000'),
+              InputFormField(
+                hint: '500,000',
+                controller: amountController,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly
+                ],
+                keyboardType: TextInputType.number,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               smallVerticalSpace(),
               textBoxTitle('Promo(Optional)'),
-              const InputFormField(hint: 'GHRE0'),
+              InputFormField(
+                hint: 'GHRE0',
+                controller: promoController,
+              ),
               verticalSpace(),
               Container(
                 decoration: BoxDecoration(
@@ -342,10 +402,13 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.success)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.success);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -397,8 +460,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(insight, height: 25,
-                        package: "mca_sdk"))),
+                    child:
+                        Image.asset(insight, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -425,8 +488,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(layer, height: 25,
-                        package: "mca_sdk"))),
+                    child: Image.asset(layer, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),

@@ -1,7 +1,6 @@
 name: mca_sdk
 description: MyCover SDK
 version: 0.0.1
-author: MCA
 homepage: https://github.com/enypeter/mca_sdk
 
 environment:
@@ -12,6 +11,11 @@ dependencies:
   flutter:
     sdk: flutter
   http:
+  flutter_datetime_picker:
+  connectivity_plus:
+#    git:
+#      url: https://github.com/Realank/flutter_datetime_picker.git
+#      ref: master
 
 
 dev_dependencies:
