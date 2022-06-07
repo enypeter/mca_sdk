@@ -216,7 +216,11 @@ class _HealthScreenState extends State<HealthScreen>
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.planDetail);
+                    }
+                  }),
               smallVerticalSpace(),
               Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
@@ -332,7 +336,7 @@ class _HealthScreenState extends State<HealthScreen>
                           suffixIcon: const Icon(Icons.expand_more),
                           enabled: false,
                           controller: durationController,
-                          validator: (value) => EmailValidator.validate(value),
+                          validator: (value) => FieldValidator.validate(value),
                         ),
                       ),
                     ],
@@ -358,7 +362,7 @@ class _HealthScreenState extends State<HealthScreen>
               ),
               smallVerticalSpace(),
               textBoxTitle('Promo code (Optional)'),
-               InputFormField(
+              InputFormField(
                 hint: 'GHRE0',
                 controller: promoController,
               ),
@@ -367,12 +371,14 @@ class _HealthScreenState extends State<HealthScreen>
                 decoration: BoxDecoration(
                     color: FILL_DEEP_GREEN,
                     borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
-                  decoration: const InputDecoration(
-                      filled: false, border: InputBorder.none),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+                  child: Text(
+                    '₦${amountController.text}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
                 ),
               ),
               verticalSpace(),
@@ -380,7 +386,11 @@ class _HealthScreenState extends State<HealthScreen>
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.success)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.success);
+                    }
+                  }),
               smallVerticalSpace(),
               Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
