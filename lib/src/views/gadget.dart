@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../const.dart';
 import '../theme.dart';
+import '../utils/number_format.dart';
+import '../utils/validator.dart';
 import '../widgets/buttons.dart';
 import '../widgets/common.dart';
 import '../widgets/input.dart';
@@ -17,6 +20,15 @@ class _GadgetScreenState extends State<GadgetScreen>
   TabController? tabController;
   int selectedTabIndex = 0;
   BodyType bodyType = BodyType.introPage;
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final serialController = TextEditingController();
+  final typeController = TextEditingController();
+  final brandController = TextEditingController();
+  final promoController = TextEditingController();
+  final amountController = TextEditingController();
 
   @override
   initState() {
@@ -44,7 +56,7 @@ class _GadgetScreenState extends State<GadgetScreen>
 
   @override
   Widget build(BuildContext context) {
-    return selectBody(bodyType);
+    return Form(key: _formKey, child: selectBody(bodyType));
   }
 
   selectBody(BodyType bodyType) {
@@ -104,8 +116,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                   onTap: () =>
                       setState(() => bodyType = BodyType.personalDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
             ],
           ),
         ),
@@ -130,8 +141,8 @@ class _GadgetScreenState extends State<GadgetScreen>
                           color: FILL_GREEN, shape: BoxShape.circle),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut, height: 55, width: 55,
-                            package: "mca_sdk"),
+                        child: Image.asset(checkOut,
+                            height: 55, width: 55, package: "mca_sdk"),
                       ))),
               verticalSpace(),
               const Center(
@@ -149,8 +160,7 @@ class _GadgetScreenState extends State<GadgetScreen>
               Padding(
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
-                    text: 'Done',
-                    onTap: () => setState(() => bodyType = BodyType.introPage)),
+                    text: 'Done', onTap: () => Navigator.pop(context)),
               ),
               smallVerticalSpace(),
             ],
@@ -192,26 +202,86 @@ class _GadgetScreenState extends State<GadgetScreen>
               ),
               verticalSpace(),
               textBoxTitle('Full name'),
-              const InputFormField(hint: 'First name Last name'),
+              InputFormField(
+                hint: 'First name Last name',
+                controller: nameController,
+                textCapitalization: TextCapitalization.words,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               smallVerticalSpace(),
               textBoxTitle('Email'),
-              const InputFormField(hint: 'abc_2002@gmail.com'),
+              InputFormField(
+                hint: 'abc_2002@gmail.com',
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                validator: (value) => EmailValidator.validate(value),
+              ),
               verticalSpace(),
               verticalSpace(),
               const Divider(),
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.planDetail);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
         ),
       ),
     );
+  }
+
+
+  List<String> typeOfGadget = ['Laptop', 'Phone', 'Headset', 'TV Set', 'Home Theater'];
+
+  void bottomSheetPicker(context, {required title, onSelect}) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            decoration: BoxDecoration(
+                color: WHITE, borderRadius: BorderRadius.circular(15)),
+            height: MediaQuery.of(context).size.height * 0.45,
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            typeOfGadget.length,
+                                (i) => ListTile(
+                              trailing: typeController.text == typeOfGadget[i]
+                                  ? const Icon(Icons.check, color: PRIMARY)
+                                  : const SizedBox.shrink(),
+                              title: Text(typeOfGadget[i],
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 16)),
+                              onTap: () => onSelect(typeOfGadget[i]),
+                            ))),
+                  ),
+                ),
+              ],
+            )));
   }
 
   planDetailScreen() {
@@ -236,7 +306,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                       Icon(Icons.info, color: GREEN),
                       SizedBox(width: 15),
                       Expanded(
-                        child: Text('Enter vehicle details',
+                        child: Text('Enter gadget details',
                             style: TextStyle(fontSize: 12, color: BLACK)),
                       )
                     ],
@@ -251,10 +321,20 @@ class _GadgetScreenState extends State<GadgetScreen>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('Gadget Type'),
-                      const InputFormField(
-                        hint: 'Phone',
-                        suffixIcon: const Icon(Icons.expand_more),
+                       InkWell(
+                         onTap: () => bottomSheetPicker(context,
+                             title: 'Select Type of Gadget', onSelect: (value) {
+                               Navigator.pop(context);
+                               typeController.text = value;
+                             }),
+                         child: InputFormField(
+                          hint: 'Phone',
+                          enabled: false,
+                          suffixIcon: const Icon(Icons.expand_more),
+                          controller: typeController,
+                          validator: (value) => FieldValidator.validate(value),
                       ),
+                       ),
                     ],
                   )),
                   const SizedBox(width: 10),
@@ -263,23 +343,35 @@ class _GadgetScreenState extends State<GadgetScreen>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('Brand'),
-                      const InputFormField(hint: 'iPhone X'),
+                      InputFormField(
+                        hint: 'iPhone X',
+                        controller: brandController,
+                        validator: (value) => FieldValidator.validate(value),
+                      ),
                     ],
                   )),
                 ],
               ),
               smallVerticalSpace(),
               textBoxTitle('Serial No.'),
-              const InputFormField(hint: 'GHRE0'),
+              InputFormField(
+                hint: 'GHR893988YBE0',
+                textCapitalization: TextCapitalization.words,
+                controller: serialController,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               verticalSpace(),
               const Divider(),
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail2)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.planDetail2);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -319,32 +411,57 @@ class _GadgetScreenState extends State<GadgetScreen>
               ),
               verticalSpace(),
               textBoxTitle('Gadget Value'),
-              const InputFormField(hint: '500,000'),
+               InputFormField(hint: '500,000', controller: amountController,
+                inputFormatters: <TextInputFormatter>[
+                  FilteringTextInputFormatter.digitsOnly,
+                  CustomInputFormatter(),
+                ],
+                onChanged: (string) {
+                  if (string.length > 1) {
+                    string = formatNumber(string.replaceAll(',', ''));
+                    setState(() {
+                      amountController.value = TextEditingValue(
+                        text: string,
+                        selection:
+                        TextSelection.collapsed(offset: string.length),
+                      );
+                    });
+                  }
+                },
+                keyboardType: TextInputType.number,
+                validator: (value) => FieldValidator.validate(value),),
               smallVerticalSpace(),
               textBoxTitle('Promo(Optional)'),
-              const InputFormField(hint: 'GHRE0'),
+               InputFormField(hint: 'GHRE0',              controller: promoController,
+              ),
               verticalSpace(),
               Container(
                 decoration: BoxDecoration(
                     color: FILL_DEEP_GREEN,
                     borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
-                  decoration: const InputDecoration(
-                      filled: false, border: InputBorder.none),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+                  child: Text(
+                    '₦${amountController.text}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
                 ),
               ),
+
               verticalSpace(),
               const Divider(),
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.success)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.success);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -365,8 +482,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(book, height: 25,
-                        package: "mca_sdk"))),
+                    child: Image.asset(book, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -393,8 +509,8 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(insight, height: 25,
-                        package: "mca_sdk"))),
+                    child:
+                        Image.asset(insight, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -424,8 +540,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(layer, height: 25,
-                        package: "mca_sdk"))),
+                    child: Image.asset(layer, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),

@@ -162,7 +162,8 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
                     text: 'Done',
-                    onTap: () => setState(() => bodyType = BodyType.introPage)),
+                    onTap: () => Navigator.pop(context)),
+
               ),
               smallVerticalSpace(),
             ],
@@ -203,7 +204,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
               ),
             ),
             verticalSpace(),
-            textBoxTitle('Name of Plan Owner'),
+            textBoxTitle('Full Name'),
             InputFormField(
               hint: 'First name Last name',
               controller: nameController,

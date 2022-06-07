@@ -1,9 +1,14 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 import '../const.dart';
 import '../theme.dart';
+import '../utils/validator.dart';
 import '../widgets/buttons.dart';
 import '../widgets/common.dart';
+import '../widgets/date_picker.dart';
 import '../widgets/input.dart';
 
 class TravelScreen extends StatefulWidget {
@@ -18,6 +23,16 @@ class _TravelScreenState extends State<TravelScreen>
   TabController? tabController;
   int selectedTabIndex = 0;
   BodyType bodyType = BodyType.introPage;
+
+  final _formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final emailController = TextEditingController();
+  final phoneNumberController = TextEditingController();
+  final placeController = TextEditingController();
+  final fromDateController = TextEditingController();
+  final toDateController = TextEditingController();
+  final promoController = TextEditingController();
+  final amountController = TextEditingController();
 
   @override
   initState() {
@@ -45,7 +60,7 @@ class _TravelScreenState extends State<TravelScreen>
 
   @override
   Widget build(BuildContext context) {
-    return selectBody(bodyType);
+    return Form(key: _formKey, child: selectBody(bodyType));
   }
 
   selectBody(BodyType bodyType) {
@@ -99,8 +114,7 @@ class _TravelScreenState extends State<TravelScreen>
                   onTap: () =>
                       setState(() => bodyType = BodyType.personalDetail)),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
             ],
           ),
         ),
@@ -125,8 +139,8 @@ class _TravelScreenState extends State<TravelScreen>
                           color: FILL_GREEN, shape: BoxShape.circle),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut, height: 55, width: 55,
-                            package: "mca_sdk"),
+                        child: Image.asset(checkOut,
+                            height: 55, width: 55, package: "mca_sdk"),
                       ))),
               verticalSpace(),
               const Center(
@@ -144,9 +158,7 @@ class _TravelScreenState extends State<TravelScreen>
               Padding(
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
-                    text: 'Done',
-                    onTap: () =>
-                        setState(() => bodyType = BodyType.introPage)),
+                    text: 'Done', onTap: () => Navigator.pop(context)),
               ),
               smallVerticalSpace(),
             ],
@@ -188,20 +200,33 @@ class _TravelScreenState extends State<TravelScreen>
               ),
               verticalSpace(),
               textBoxTitle('Full Name'),
-              const InputFormField(hint: 'First name Last name'),
+              InputFormField(
+                hint: 'First name Last name',
+                controller: nameController,
+                textCapitalization: TextCapitalization.words,
+                validator: (value) => FieldValidator.validate(value),
+              ),
               smallVerticalSpace(),
               textBoxTitle('Email'),
-              const InputFormField(hint: 'abc_2002@gmail.com'),
+              InputFormField(
+                hint: 'abc_2002@gmail.com',
+                keyboardType: TextInputType.emailAddress,
+                controller: emailController,
+                validator: (value) => EmailValidator.validate(value),
+              ),
               verticalSpace(),
               verticalSpace(),
               const Divider(),
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.planDetail)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.planDetail);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -242,9 +267,12 @@ class _TravelScreenState extends State<TravelScreen>
               ),
               verticalSpace(),
               textBoxTitle('Travelling to'),
-              const InputFormField(
+              InputFormField(
                 hint: 'Canada',
                 suffixIcon: const Icon(Icons.expand_more),
+                controller: placeController,
+                textCapitalization: TextCapitalization.words,
+                validator: (value) => FieldValidator.validate(value),
               ),
               smallVerticalSpace(),
               Row(
@@ -254,9 +282,26 @@ class _TravelScreenState extends State<TravelScreen>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('From'),
-                      const InputFormField(
-                        hint: '6 month',
-                        suffixIcon: Icon(Icons.event_note_rounded),
+                      InkWell(
+                        onTap: () {
+                          showSelectDatePicker(context, onSelectDate: (value) {
+                            Navigator.pop(context);
+                            fromDateController.text = DateFormat('dd/MM/yyyy')
+                                .format(value)
+                                .toString();
+                          });
+                          if (Platform.isIOS) {
+                            fromDateController.text =
+                                DateFormat('dd/MM/yyyy').format(DateTime.now()).toString();
+                          }
+                        },
+                        child: InputFormField(
+                          hint: '01/10/2022',
+                          enabled: false,
+                          suffixIcon: Icon(Icons.event_note_rounded),
+                          controller: fromDateController,
+                          validator: (value) => FieldValidator.validate(value),
+                        ),
                       ),
                     ],
                   )),
@@ -266,9 +311,26 @@ class _TravelScreenState extends State<TravelScreen>
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       textBoxTitle('To'),
-                      const InputFormField(
-                        hint: '6 month',
-                        suffixIcon: const Icon(Icons.event_note_rounded),
+                      InkWell(
+                        onTap: () {
+                          showSelectDatePicker(context, onSelectDate: (value) {
+                            Navigator.pop(context);
+                            toDateController.text = DateFormat('dd/MM/yyyy')
+                                .format(value)
+                                .toString();
+                          });
+                          if (Platform.isIOS) {
+                            toDateController.text =
+                                DateFormat('dd/MM/yyyy').format(DateTime.now()).toString();
+                          }
+                        },
+                        child: InputFormField(
+                          enabled: false,
+                          hint: '12/10/2022',
+                          suffixIcon: const Icon(Icons.event_note_rounded),
+                          controller: toDateController,
+                          validator: (value) => FieldValidator.validate(value),
+                        ),
                       ),
                     ],
                   )),
@@ -279,12 +341,14 @@ class _TravelScreenState extends State<TravelScreen>
                 decoration: BoxDecoration(
                     color: FILL_DEEP_GREEN,
                     borderRadius: BorderRadius.circular(5)),
-                child: TextFormField(
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
-                  decoration: const InputDecoration(
-                      filled: false, border: InputBorder.none),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+                  child: Text(
+                    '₦${amountController.text}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                        fontWeight: FontWeight.w600, fontSize: 18),
+                  ),
                 ),
               ),
               verticalSpace(),
@@ -292,10 +356,13 @@ class _TravelScreenState extends State<TravelScreen>
               verticalSpace(),
               button(
                   text: 'Get Covered',
-                  onTap: () => setState(() => bodyType = BodyType.success)),
+                  onTap: () {
+                    if (_formKey.currentState!.validate()) {
+                      setState(() => bodyType = BodyType.success);
+                    }
+                  }),
               smallVerticalSpace(),
-              Image.asset(hygeia, height: 24,
-                  package: "mca_sdk"),
+              Image.asset(hygeia, height: 24, package: "mca_sdk"),
               const Spacer(),
             ],
           ),
@@ -316,8 +383,7 @@ class _TravelScreenState extends State<TravelScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(book, height: 25,
-                        package: "mca_sdk"))),
+                    child: Image.asset(book, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -342,8 +408,8 @@ class _TravelScreenState extends State<TravelScreen>
                     color: FILL_GREEN),
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
-                    child: Image.asset(insight, height: 25,
-                        package: "mca_sdk"))),
+                    child:
+                        Image.asset(insight, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),

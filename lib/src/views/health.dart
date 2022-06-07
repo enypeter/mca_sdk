@@ -25,8 +25,6 @@ class _HealthScreenState extends State<HealthScreen>
   final phoneNumberController = TextEditingController();
   final durationController = TextEditingController();
   final beneficiaryController = TextEditingController();
-  final yearController = TextEditingController();
-  final plateNumberController = TextEditingController();
   final promoController = TextEditingController();
   final amountController = TextEditingController();
 
@@ -154,7 +152,7 @@ class _HealthScreenState extends State<HealthScreen>
                 padding: const EdgeInsets.all(35.0),
                 child: successButton(
                     text: 'Done',
-                    onTap: () => setState(() => bodyType = BodyType.introPage)),
+                    onTap: () => Navigator.pop(context)),
               ),
               smallVerticalSpace(),
             ],

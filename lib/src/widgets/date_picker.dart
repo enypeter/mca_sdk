@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import '../theme.dart';
 
-void showDatePicker(context, {onSelectDate}) {
+void showSelectDatePicker(context, {onSelectDate}) {
   Platform.isAndroid
       ? DatePicker.showDatePicker(context,
           theme: const DatePickerTheme(
