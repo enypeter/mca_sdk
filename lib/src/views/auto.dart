@@ -323,6 +323,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                     InkWell(
                       onTap: () => bottomSheetPicker(context,
                           title: 'Select Type of Car', onSelect: (value) {
+                        Navigator.pop(context);
                         typeController.text = value;
                       }),
                       child: InputFormField(
@@ -440,12 +441,14 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
               decoration: BoxDecoration(
                   color: FILL_DEEP_GREEN,
                   borderRadius: BorderRadius.circular(5)),
-              child: TextFormField(
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 18),
-                decoration: const InputDecoration(
-                    filled: false, border: InputBorder.none),
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 15, 8, 15),
+                child: Text(
+                  '₦${amountController.text}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                      fontWeight: FontWeight.w600, fontSize: 18),
+                ),
               ),
             ),
             verticalSpace(),
