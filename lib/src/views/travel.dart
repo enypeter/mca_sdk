@@ -235,6 +235,68 @@ class _TravelScreenState extends State<TravelScreen>
     );
   }
 
+  List<String> countryList = [
+    'Australia',
+    'Canada',
+    'China',
+    'England',
+    'France',
+    'Germany',
+    'Ireland',
+    'Japan',
+    'Maldives',
+    'Malaysia',
+    'Nigeria',
+    'United State of America',
+    'United Arab Emirate',
+    'Singapore',
+  ];
+
+  void bottomSheetPicker(context, {required title, onSelect}) {
+    showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+            decoration: BoxDecoration(
+                color: WHITE, borderRadius: BorderRadius.circular(15)),
+            height: MediaQuery.of(context).size.height * 0.45,
+            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Text(
+                      title,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.w600, fontSize: 15),
+                    ),
+                  ),
+                ),
+                Divider(),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                        children: List.generate(
+                            countryList.length,
+                            (i) => ListTile(
+                                  trailing: placeController.text ==
+                                      countryList[i]
+                                      ? const Icon(Icons.check, color: PRIMARY)
+                                      : const SizedBox.shrink(),
+                                  title: Text(countryList[i],
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          fontSize: 16)),
+                                  onTap: () => onSelect(countryList[i]),
+                                ))),
+                  ),
+                ),
+              ],
+            )));
+  }
+
   planDetailScreen() {
     return Center(
       child: Container(
@@ -267,12 +329,20 @@ class _TravelScreenState extends State<TravelScreen>
               ),
               verticalSpace(),
               textBoxTitle('Travelling to'),
-              InputFormField(
-                hint: 'Canada',
-                suffixIcon: const Icon(Icons.expand_more),
-                controller: placeController,
-                textCapitalization: TextCapitalization.words,
-                validator: (value) => FieldValidator.validate(value),
+              InkWell(
+                onTap: () => bottomSheetPicker(context,
+                    title: 'Select Country', onSelect: (value) {
+                      Navigator.pop(context);
+                      placeController.text = value;
+                    }),
+                child: InputFormField(
+                  enabled: false,
+                  hint: 'Canada',
+                  suffixIcon: const Icon(Icons.expand_more),
+                  controller: placeController,
+                  textCapitalization: TextCapitalization.words,
+                  validator: (value) => FieldValidator.validate(value),
+                ),
               ),
               smallVerticalSpace(),
               Row(
@@ -291,8 +361,9 @@ class _TravelScreenState extends State<TravelScreen>
                                 .toString();
                           });
                           if (Platform.isIOS) {
-                            fromDateController.text =
-                                DateFormat('dd/MM/yyyy').format(DateTime.now()).toString();
+                            fromDateController.text = DateFormat('dd/MM/yyyy')
+                                .format(DateTime.now())
+                                .toString();
                           }
                         },
                         child: InputFormField(
@@ -320,8 +391,9 @@ class _TravelScreenState extends State<TravelScreen>
                                 .toString();
                           });
                           if (Platform.isIOS) {
-                            toDateController.text =
-                                DateFormat('dd/MM/yyyy').format(DateTime.now()).toString();
+                            toDateController.text = DateFormat('dd/MM/yyyy')
+                                .format(DateTime.now())
+                                .toString();
                           }
                         },
                         child: InputFormField(
