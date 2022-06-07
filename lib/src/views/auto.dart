@@ -9,6 +9,7 @@ import '../widgets/buttons.dart';
 import '../widgets/common.dart';
 import '../widgets/input.dart';
 import 'bottomSheetPicker.dart';
+import 'success_page.dart';
 
 class AutoScreen extends StatefulWidget {
   const AutoScreen({Key? key}) : super(key: key);
@@ -72,7 +73,11 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
       case BodyType.planDetail2:
         return planDetailScreen2();
       case BodyType.success:
-        return successScreen();
+        return successScreen(
+          context,
+          message:
+              'You have just purchase Auto\nProduct, Kindly Check your email\nto complete your activation',
+        );
     }
   }
 
@@ -125,54 +130,6 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
     );
   }
 
-  successScreen() {
-    return Center(
-      child: Container(
-        color: WHITE,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              verticalSpace(),
-              Center(
-                  child: Container(
-                      decoration: const BoxDecoration(
-                          color: FILL_GREEN, shape: BoxShape.circle),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut,
-                            height: 55, width: 55, package: "mca_sdk"),
-                      ))),
-              verticalSpace(),
-              const Center(
-                child: Text(
-                  'Purchase Successful',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
-                ),
-              ),
-              verticalSpace(),
-              const Text(
-                  'You have just purchase Auto\nProduct, Kindly Check your email\nto complete your activation',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16)),
-              verticalSpace(),
-              Padding(
-                padding: const EdgeInsets.all(35.0),
-                child: successButton(
-                    text: 'Done',
-                    onTap: () => Navigator.pop(context)),
-
-              ),
-              smallVerticalSpace(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   personalDetailScreen() {
     return Container(
       color: WHITE,
@@ -185,11 +142,10 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
             verticalSpace(),
             Container(
               decoration: BoxDecoration(
-                  color: FILL_GREEN,
-                  borderRadius: BorderRadius.circular(3)),
+                  color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
               child: Padding(
-                padding: const EdgeInsets.symmetric(
-                    vertical: 8.0, horizontal: 15),
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                 child: Row(
                   children: const [
                     Icon(Icons.info, color: GREEN),
@@ -422,8 +378,7 @@ class _AutoScreenState extends State<AutoScreen> with TickerProviderStateMixin {
                   setState(() {
                     amountController.value = TextEditingValue(
                       text: string,
-                      selection:
-                      TextSelection.collapsed(offset: string.length),
+                      selection: TextSelection.collapsed(offset: string.length),
                     );
                   });
                 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:mca_sdk/src/views/success_page.dart';
 import '../const.dart';
 import '../theme.dart';
 import '../utils/number_format.dart';
@@ -70,7 +71,11 @@ class _GadgetScreenState extends State<GadgetScreen>
       case BodyType.planDetail2:
         return planDetailScreen2();
       case BodyType.success:
-        return successScreen();
+        return successScreen(
+          context,
+          message:
+          'You have just purchase Gadget\nProduct, Kindly Check your email\nto complete your activation',
+        );
     }
   }
 
@@ -124,51 +129,7 @@ class _GadgetScreenState extends State<GadgetScreen>
     );
   }
 
-  successScreen() {
-    return Center(
-      child: Container(
-        color: WHITE,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              verticalSpace(),
-              Center(
-                  child: Container(
-                      decoration: const BoxDecoration(
-                          color: FILL_GREEN, shape: BoxShape.circle),
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.asset(checkOut,
-                            height: 55, width: 55, package: "mca_sdk"),
-                      ))),
-              verticalSpace(),
-              const Center(
-                child: Text(
-                  'Purchase Successful',
-                  style: TextStyle(fontWeight: FontWeight.w700, fontSize: 22),
-                ),
-              ),
-              verticalSpace(),
-              const Text(
-                  'You have just purchase Gadget\nProduct, Kindly Check your email\nto complete your activation',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16)),
-              verticalSpace(),
-              Padding(
-                padding: const EdgeInsets.all(35.0),
-                child: successButton(
-                    text: 'Done', onTap: () => Navigator.pop(context)),
-              ),
-              smallVerticalSpace(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+
 
   personalDetailScreen() {
     return Center(
@@ -186,7 +147,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                   child: Row(
                     children: const [
                       Icon(Icons.info, color: GREEN),
@@ -238,50 +199,63 @@ class _GadgetScreenState extends State<GadgetScreen>
   }
 
 
-  List<String> typeOfGadget = ['Laptop', 'Phone', 'Headset', 'TV Set', 'Home Theater'];
+  List<String> typeOfGadget = [
+    'Laptop',
+    'Phone',
+    'Headset',
+    'TV Set',
+    'Home Theater'
+  ];
 
   void bottomSheetPicker(context, {required title, onSelect}) {
     showModalBottomSheet(
         context: context,
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
-        builder: (context) => Container(
-            decoration: BoxDecoration(
-                color: WHITE, borderRadius: BorderRadius.circular(15)),
-            height: MediaQuery.of(context).size.height * 0.45,
-            padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Text(
-                      title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w600, fontSize: 15),
+        builder: (context) =>
+            Container(
+                decoration: BoxDecoration(
+                    color: WHITE, borderRadius: BorderRadius.circular(15)),
+                height: MediaQuery
+                    .of(context)
+                    .size
+                    .height * 0.45,
+                padding: const EdgeInsets.fromLTRB(20, 20, 0, 20),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+                        child: Text(
+                          title,
+                          style: const TextStyle(
+                              fontWeight: FontWeight.w600, fontSize: 15),
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Divider(),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                        children: List.generate(
-                            typeOfGadget.length,
-                                (i) => ListTile(
-                              trailing: typeController.text == typeOfGadget[i]
-                                  ? const Icon(Icons.check, color: PRIMARY)
-                                  : const SizedBox.shrink(),
-                              title: Text(typeOfGadget[i],
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 16)),
-                              onTap: () => onSelect(typeOfGadget[i]),
-                            ))),
-                  ),
-                ),
-              ],
-            )));
+                    Divider(),
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                            children: List.generate(
+                                typeOfGadget.length,
+                                    (i) =>
+                                    ListTile(
+                                      trailing: typeController.text ==
+                                          typeOfGadget[i]
+                                          ? const Icon(
+                                          Icons.check, color: PRIMARY)
+                                          : const SizedBox.shrink(),
+                                      title: Text(typeOfGadget[i],
+                                          style: const TextStyle(
+                                              fontWeight: FontWeight.w500,
+                                              fontSize: 16)),
+                                      onTap: () => onSelect(typeOfGadget[i]),
+                                    ))),
+                      ),
+                    ),
+                  ],
+                )));
   }
 
   planDetailScreen() {
@@ -300,7 +274,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                   child: Row(
                     children: const [
                       Icon(Icons.info, color: GREEN),
@@ -318,38 +292,42 @@ class _GadgetScreenState extends State<GadgetScreen>
                 children: [
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      textBoxTitle('Gadget Type'),
-                       InkWell(
-                         onTap: () => bottomSheetPicker(context,
-                             title: 'Select Type of Gadget', onSelect: (value) {
-                               Navigator.pop(context);
-                               typeController.text = value;
-                             }),
-                         child: InputFormField(
-                          hint: 'Phone',
-                          enabled: false,
-                          suffixIcon: const Icon(Icons.expand_more),
-                          controller: typeController,
-                          validator: (value) => FieldValidator.validate(value),
-                      ),
-                       ),
-                    ],
-                  )),
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          textBoxTitle('Gadget Type'),
+                          InkWell(
+                            onTap: () =>
+                                bottomSheetPicker(context,
+                                    title: 'Select Type of Gadget',
+                                    onSelect: (value) {
+                                      Navigator.pop(context);
+                                      typeController.text = value;
+                                    }),
+                            child: InputFormField(
+                              hint: 'Phone',
+                              enabled: false,
+                              suffixIcon: const Icon(Icons.expand_more),
+                              controller: typeController,
+                              validator: (value) =>
+                                  FieldValidator.validate(value),
+                            ),
+                          ),
+                        ],
+                      )),
                   const SizedBox(width: 10),
                   Expanded(
                       child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      textBoxTitle('Brand'),
-                      InputFormField(
-                        hint: 'iPhone X',
-                        controller: brandController,
-                        validator: (value) => FieldValidator.validate(value),
-                      ),
-                    ],
-                  )),
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          textBoxTitle('Brand'),
+                          InputFormField(
+                            hint: 'iPhone X',
+                            controller: brandController,
+                            validator: (value) =>
+                                FieldValidator.validate(value),
+                          ),
+                        ],
+                      )),
                 ],
               ),
               smallVerticalSpace(),
@@ -396,7 +374,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                     color: FILL_GREEN, borderRadius: BorderRadius.circular(3)),
                 child: Padding(
                   padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                  const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                   child: Row(
                     children: const [
                       Icon(Icons.info, color: GREEN),
@@ -411,7 +389,9 @@ class _GadgetScreenState extends State<GadgetScreen>
               ),
               verticalSpace(),
               textBoxTitle('Gadget Value'),
-               InputFormField(hint: '500,000', controller: amountController,
+              InputFormField(
+                hint: '500,000',
+                controller: amountController,
                 inputFormatters: <TextInputFormatter>[
                   FilteringTextInputFormatter.digitsOnly,
                   CustomInputFormatter(),
@@ -432,7 +412,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                 validator: (value) => FieldValidator.validate(value),),
               smallVerticalSpace(),
               textBoxTitle('Promo(Optional)'),
-               InputFormField(hint: 'GHRE0',              controller: promoController,
+              InputFormField(hint: 'GHRE0', controller: promoController,
               ),
               verticalSpace(),
               Container(
@@ -470,7 +450,8 @@ class _GadgetScreenState extends State<GadgetScreen>
     );
   }
 
-  howItWorks() => Container(
+  howItWorks() =>
+      Container(
         color: LIGHT_GREY,
         child: Column(
           children: [
@@ -497,7 +478,8 @@ class _GadgetScreenState extends State<GadgetScreen>
         ),
       );
 
-  whatCover() => Container(
+  whatCover() =>
+      Container(
         color: LIGHT_GREY,
         child: Column(
           children: [
@@ -510,7 +492,7 @@ class _GadgetScreenState extends State<GadgetScreen>
                 child: Padding(
                     padding: const EdgeInsets.all(20.0),
                     child:
-                        Image.asset(insight, height: 25, package: "mca_sdk"))),
+                    Image.asset(insight, height: 25, package: "mca_sdk"))),
             verticalSpace(),
             const Divider(),
             verticalSpace(),
@@ -528,7 +510,8 @@ class _GadgetScreenState extends State<GadgetScreen>
         ),
       );
 
-  specialCondition() => Container(
+  specialCondition() =>
+      Container(
         color: LIGHT_GREY,
         child: Column(
           children: [
